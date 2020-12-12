@@ -9,3 +9,4 @@ School schedule alarm system.
 - Add sounds
 - Set sound to event
 - Start automatically on startup
+- play audio immediately
