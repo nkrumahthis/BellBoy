@@ -6,9 +6,8 @@ from datetime import datetime
 from playsound import playsound
 import pyttsx3
 from pygame import mixer
+from pygame import error as sounderror
 import csv
-
-tunes_path = ""
 
 
 def initialize():
@@ -23,24 +22,57 @@ def initialize():
 
 
 def target():
-    alarmtime = "10:17"
+    # alarmtime = "10:35"
     initialize()
-    engine = pyttsx3.init()
-    mixer.init()
+
+    # print(timetable)
+    # alarmargs = ("breakfast time", "10:38", "alarm_tunes\\al1.mp3")
+    # alarmargs = timetable[1]
+
     while True:
         localtime = datetime.now().strftime("%H:%M")
-        if localtime == alarmtime:
-            mixer.music.load("alarm_tunes\\al1.mp3")
-            mixer.music.play()
-            engine.say("breakfast time")
-            engine.runAndWait()
-            time.sleep(60)
 
-            break
+        timetable = readtimetable()
+
+        for index in range(1, len(timetable)):
+            row = timetable[index]
+            print(row)
+            if(localtime == row[1].strip()):
+                soundalarm(*row)
+
+        time.sleep(5)
+
+
+def soundalarm(description, alarmtime, sound):
+    engine = pyttsx3.init()
+    engine.say("The time is " + alarmtime)
+    engine.say("Time for " + description)
+    engine.runAndWait()
+
+    try:
+        mixer.init()
+        mixer.music.load(sound)
+        mixer.music.play()
+        time.sleep(60)
+    except sounderror as errormsg:
+        print(errormsg)
+        engine.say(errormsg)
+        engine.runAndWait()
+
+
+def readtimetable():
+    timetable = []
+    with open('timetable.csv', 'rt') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for row in reader:
+            timetable.append(row)
+
+    return timetable
 
 
 def main():
     initialize()
+    readtimetable()
     mainthread = threading.Thread(target=target)
     mainthread.start()
 
