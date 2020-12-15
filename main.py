@@ -51,7 +51,7 @@ def soundalarm(description, alarmtime, sound):
 
     try:
         mixer.init()
-        mixer.music.load(sound)
+        mixer.music.load("alarm_tunes/" + sound.strip())
         mixer.music.play()
         time.sleep(60)
     except sounderror as errormsg:
