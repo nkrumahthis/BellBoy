@@ -39,9 +39,10 @@ def target():
             row = timetable[index]
             print("checking if today is", row[2])
             # check if today is among
-            if(localtime == row[1].strip() and (row[2].capitalize() == "Everyday" or row[2].capitalize == dayofweek() or row[2] == dateoftoday)):
+            if(row[2].capitalize() == "Everyday" or row[2].capitalize() == dayofweek or row[2] == dateoftoday or row[2] == ''):
                 print("today dey mong ", row)
-                soundalarm(*row)
+                if(localtime == row[1].strip()):
+                    soundalarm(*row)
 
         time.sleep(5)
 
