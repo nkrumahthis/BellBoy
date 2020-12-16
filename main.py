@@ -31,19 +31,22 @@ def target():
 
     while True:
         localtime = datetime.now().strftime("%H:%M")
-
+        dayofweek = datetime.now().strftime("%A")
+        dateoftoday = datetime.now().strftime("%d-%m-%Y")
         timetable = readtimetable()
 
         for index in range(1, len(timetable)):
             row = timetable[index]
-            print(row)
-            if(localtime == row[1].strip()):
+            print("checking if today is", row[2])
+            # check if today is among
+            if(localtime == row[1].strip() and (row[2].capitalize() == "Everyday" or row[2].capitalize == dayofweek() or row[2] == dateoftoday)):
+                print("today dey mong ", row)
                 soundalarm(*row)
 
         time.sleep(5)
 
 
-def soundalarm(description, alarmtime, sound):
+def soundalarm(description, alarmtime, days, sound):
     engine = pyttsx3.init()
     engine.say("The time is " + alarmtime)
     engine.say("Time for " + description)
